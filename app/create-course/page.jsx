@@ -1,7 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import SelectCategory from './_components/SelectCategory'
 import TopicDescription from './_components/TopicDescription'
 import SelectOption from './_components/SelectOption'
@@ -14,119 +14,44 @@ import uuid4 from 'uuid4'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 
-
 const CreateCourse = () => {
-
-
   const StepperOptions = [
-    {
-      id: 1,
-      name: 'Category',
-      icon: <Image
-        src="/category-animation.gif"
-        alt="GIF Icon"
-        width={50}
-        height={50}
-        priority
-        unoptimized
-        className='rounded-lg'
-      />
-    },
-    {
-      id: 1,
-      name: 'Topic and Description',
-      icon: <Image
-        src="/topic-animation.gif"
-        alt="GIF Icon"
-        width={50}
-        height={50}
-        priority
-        unoptimized
-        className='rounded-lg'
-      />
-    },
-    {
-      id: 3,
-      name: 'Options',
-      icon: <Image
-        src="/options-animation.gif"
-        alt="GIF Icon"
-        width={50}
-        height={50}
-        priority
-        unoptimized
-        className='rounded-lg'
-      />
-    },
-  ]
+    { id: 1, name: 'Category', icon: '/category-animation.gif' },
+    { id: 2, name: 'Topic and Description', icon: '/topic-animation.gif' },
+    { id: 3, name: 'Options', icon: '/options-animation.gif' },
+  ];
 
-  const router = useRouter()
-
-  const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
-
+  const router = useRouter();
+  const { userCourseInput } = useContext(UserInputContext);
   const [activeIndex, setActiveIndex] = useState(0);
-
   const { user } = useUser();
-
-  console.log("USER",user)
-
-
-  useEffect(() => {
-    console.log(userCourseInput)
-  }, [userCourseInput])
+  const [loading, setLoading] = useState(false);
 
   const checkStatus = () => {
-    if (activeIndex === 0) {
-      // Ensure 'category' is defined and not empty
-      return !(userCourseInput?.category && userCourseInput.category.trim() !== "");
-    }
-    if (activeIndex === 1) {
-      // Ensure 'topic' and 'description' are defined and not empty
-      return !(
-        userCourseInput?.topic &&
-        userCourseInput.topic.trim() !== "" &&
-        userCourseInput?.description &&
-        userCourseInput.description.trim() !== ""
-      );
-    }
-    else if (activeIndex === 2 && (userCourseInput?.level === undefined || userCourseInput?.duration === undefined || userCourseInput?.displayVideo === undefined || userCourseInput?.noOfChapters === undefined)) {
-      return true
-    }
-    return false; // Default to false if no condition matches
+    if (activeIndex === 0) return !(userCourseInput?.category?.trim());
+    if (activeIndex === 1) return !(userCourseInput?.topic?.trim() && userCourseInput?.description?.trim());
+    if (activeIndex === 2) return !(userCourseInput?.level && userCourseInput?.duration && userCourseInput?.displayVideo && userCourseInput?.noOfChapters);
+    return false;
   };
-  const [loading, setLoading] = useState(false)
 
   const GenerateCourseLayout = async () => {
     setLoading(true);
     try {
-
-      const BASIC_PROMPT = "Generate A Course Tutorial on Following Detail With field as Course Name, Description, Along with Chapter Name, about, Duration: ";
-      const USER_INPUT_PROMPT = `Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOf Chapters: ${userCourseInput?.noOfChapters}, in JSON format`;
-      const FINAL_PROMPT = BASIC_PROMPT + USER_INPUT_PROMPT;
-      console.log("Prompt:", FINAL_PROMPT);
+      const FINAL_PROMPT = `Generate A Course Tutorial on Following Detail: Category: ${userCourseInput?.category}, Topic: ${userCourseInput?.topic}, Level: ${userCourseInput?.level}, Duration: ${userCourseInput?.duration}, NoOf Chapters: ${userCourseInput?.noOfChapters}, in JSON format`;
       const result = await GenerateCourseLayout_AI.sendMessage(FINAL_PROMPT);
-
-      if (result?.response?.text()) {
-        const parsedResponse = JSON.parse(result.response.text());
-        SaveCourseLayoutInDb(JSON.parse(result.response?.text()));
-        console.log("Parsed Response:", parsedResponse);
-
-      } else {
-        console.error("Unexpected response format:", result);
-      }
+      const parsedResponse = JSON.parse(result.response.text());
+      SaveCourseLayoutInDb(parsedResponse);
     } catch (error) {
-      console.log("Error generating course layout:", error.message);
+      console.error("Error generating course layout:", error.message);
     } finally {
       setLoading(false);
-
     }
-
   };
 
   const SaveCourseLayoutInDb = async (courseLayout) => {
-    var id = uuid4();
-    setLoading(true)
-    const result = await db.insert(CourseList).values({
+    setLoading(true);
+    const id = uuid4();
+    await db.insert(CourseList).values({
       courseId: id,
       name: userCourseInput?.topic,
       level: userCourseInput?.level,
@@ -135,72 +60,68 @@ const CreateCourse = () => {
       createdBy: user?.primaryEmailAddress?.emailAddress,
       userName: user?.fullName || user?.username,
       userProfileImage: user?.imageUrl
-    })
-    console.log("finish")
-
-    setLoading(false)
-    router.replace('/create-course/' + id)
-  }
-
+    });
+    setLoading(false);
+    router.replace(`/create-course/${id}`);
+  };
 
   return (
-    <div>
-      {/* stepper */}
-      <div className='flex flex-col justify-center items-center mt-5'>
-        <h1 className='text-4xl text-primary font-medium'>Create course</h1>
-        <div className='flex mt-10'>
-          {
-            StepperOptions.map((item, index) => (
-              <div className='flex items-center' key={index}>
-                <div className='flex flex-col items-center w-[50px] md:w-[100px]'>
-                  <div className={`bg-gray-200 p-2 rounded-xl text-black ${activeIndex >= index && 'bg-primary'}`}>
-                    {item.icon}
-                  </div>
-                  <h2 className='hidden md:block md:text-sm'>{item.name}</h2>
-                </div>
-                {
-                  index != StepperOptions?.length - 1 &&
-                  <div className={`h-1 w-[50px] md:w-[100px] rounded-full lg:w-[170px]   ${activeIndex - 1 >= index ? 'bg-primary' : 'bg-gray-400'}`}></div>
-                }
+    <div className='flex flex-col items-center mt-5 px-4 sm:px-10 md:px-20 lg:px-32'>
+      <h1 className='text-2xl sm:text-3xl md:text-4xl text-primary font-semibold text-center'>Create Course</h1>
 
+      {/* Stepper */}
+      <div className='relative flex justify-center items-center mt-10 w-full max-w-4xl'>
+        {/* Background Progress Bar (Gray) */}
+        <div className="absolute top-[35px] left-0 w-full h-1 sm:h-1.5 bg-gray-300 rounded-full" />
+
+        {/* Active Progress Bar (Animated) */}
+        <div
+          className="absolute top-[35px] left-0 h-1 sm:h-1.5 bg-gradient-to-r from-blue-500 to-primary rounded-full transition-all duration-500"
+          style={{ width: `${(activeIndex / (StepperOptions.length - 1)) * 100}%` }}
+        />
+
+        {/* Stepper Items */}
+        <div className='flex justify-between w-full px-5 sm:px-10 md:px-16'>
+          {StepperOptions.map((item, index) => (
+            <div key={index} className="relative flex flex-col items-center z-10">
+              {/* Step Icon */}
+              <div className={`rounded-lg border-4 transition-all duration-300 
+          ${activeIndex >= index ? 'border-primary bg-primary text-white scale-110 shadow-lg' : 'border-gray-400 bg-gray-200'}`}>
+                <Image
+                  src={item.icon}
+                  alt={item.name}
+                  width={40} height={40}
+                  className='rounded-md w-10 sm:w-12 md:w-14'
+                />
               </div>
-            ))
-          }
+
+              {/* Step Name */}
+              <h2 className='text-xs sm:text-sm md:text-base font-medium mt-2 text-center'>{item.name}</h2>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className='px-10 md:px-20 lg:px-44 mt-10'>
-
-        {/* component */}
-        {
-          activeIndex == 0 ? <SelectCategory /> : null
-        }
-        {
-          activeIndex == 1 ? <TopicDescription /> : null
-        }
-        {
-          activeIndex == 2 ? <SelectOption /> : null
-        }
-
-        {/* next previous button */}
-        <div className='flex justify-between mt-10'>
-
-          <Button
-            disabled={activeIndex == 0}
-            onClick={() => setActiveIndex(activeIndex - 1)}
-          >Previous</Button>
-          {
-            activeIndex < 2 && <Button disabled={checkStatus()} onClick={() => setActiveIndex(activeIndex + 1)}>Next</Button>
-          }
-          {
-            activeIndex == 2 && <Button disabled={checkStatus()} onClick={() => GenerateCourseLayout()}>Generate Course</Button>
-          }
-
-        </div>
+      {/* Step Content */}
+      <div className='w-full max-w-2xl mt-10'>
+        {activeIndex === 0 && <SelectCategory />}
+        {activeIndex === 1 && <TopicDescription />}
+        {activeIndex === 2 && <SelectOption />}
       </div>
+
+      {/* Navigation Buttons */}
+      <div className='flex justify-between w-full max-w-2xl mt-10'>
+        <Button disabled={activeIndex === 0} onClick={() => setActiveIndex(activeIndex - 1)}>Previous</Button>
+        {activeIndex < 2 ? (
+          <Button disabled={checkStatus()} onClick={() => setActiveIndex(activeIndex + 1)}>Next</Button>
+        ) : (
+          <Button disabled={checkStatus()} onClick={GenerateCourseLayout}>Generate Course</Button>
+        )}
+      </div>
+
       <LoadingDialog loading={loading} />
     </div>
-  )
-}
+  );
+};
 
 export default CreateCourse;

@@ -10,9 +10,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { UserInputContext } from '@/app/_context/UserInputContext';
 
-
 const SelectOption = () => {
-
   const { userCourseInput, setUserCourseInput } = useContext(UserInputContext);
 
   const handleInputChange = (fieldName, value) => {
@@ -21,17 +19,18 @@ const SelectOption = () => {
       [fieldName]: value
     }))
   }
+
   return (
-    <div className='px-10 md:px-20 lg:px-44'>
-      <div className='grid grid-cols-2 gap-10'>
+    <div className='px-5 md:px-10 lg:px-20 xl:px-32'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10'>
+        {/* Difficulty Level */}
         <div>
-          <label htmlFor="" className='text-sm'>🎯 Difficulty Level</label>
+          <label className='text-sm font-medium text-gray-700'>🎯 Difficulty Level</label>
           <Select 
-          onValueChange={(value) => handleInputChange('level', value)}
-          defaultValue={userCourseInput?.level}
-          
+            onValueChange={(value) => handleInputChange('level', value)}
+            defaultValue={userCourseInput?.level}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="w-full mt-2">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -41,14 +40,15 @@ const SelectOption = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Course Duration */}
         <div>
-          <label htmlFor="" className='text-sm'>⏳ Course Duration</label>
+          <label className='text-sm font-medium text-gray-700'>⏳ Course Duration</label>
           <Select 
-          onValueChange={(value) => handleInputChange('duration', value)}
-          defaultValue={userCourseInput?.duration}
-          
+            onValueChange={(value) => handleInputChange('duration', value)}
+            defaultValue={userCourseInput?.duration}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="w-full mt-2">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -58,14 +58,15 @@ const SelectOption = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Add Video */}
         <div>
-          <label htmlFor="" className='text-sm'>📹 Add Video</label>
+          <label className='text-sm font-medium text-gray-700'>📹 Add Video</label>
           <Select 
-          onValueChange={(value) => handleInputChange('displayVideo', value)}
-          defaultValue={userCourseInput?.displayVideo}
-          
+            onValueChange={(value) => handleInputChange('displayVideo', value)}
+            defaultValue={userCourseInput?.displayVideo}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="w-full mt-2">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -74,10 +75,13 @@ const SelectOption = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Number of Chapters */}
         <div>
-          <label htmlFor="" className='text-sm'>📘 No. of Chapters</label>
+          <label className='text-sm font-medium text-gray-700'>📘 No. of Chapters</label>
           <Input
             type="number"
+            className="w-full mt-2"
             onChange={(e) => handleInputChange('noOfChapters', e.target.value)}
             defaultValue={userCourseInput?.noOfChapters}
           />

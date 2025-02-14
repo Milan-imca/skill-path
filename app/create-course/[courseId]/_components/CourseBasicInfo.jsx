@@ -79,7 +79,7 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
               priority
             />
           </label>
-          {edit && <input type="file" id='upload-image' className='opacity-0' onChange={onFileSelected} />}
+          <input type="file" id='upload-image' className='opacity-0' onChange={onFileSelected} />
         </div>
       </div>
     </div>

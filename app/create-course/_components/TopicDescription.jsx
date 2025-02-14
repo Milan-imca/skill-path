@@ -13,28 +13,36 @@ const TopicDescription = () => {
       [fieldName]: value
     }))
   }
+
   return (
-    <div className='mx-20 lg:mx-44'>
-      {/* input topic */}
+    <div className='px-5 md:px-10 lg:px-20 xl:px-32'>
+      {/* Input topic */}
       <div className='mt-5'>
-        <label htmlFor="">🖋️ Write the topic for which you want to generate a course (Eg:Python,Yoga,AI etc.)</label>
+        <label className="block text-sm md:text-base font-medium text-gray-700">
+          🖋️ Write the topic for which you want to generate a course (Eg: Python, Yoga, AI, etc.)
+        </label>
         <Input
-          placeholder={'Topic'}
+          className="w-full mt-2"
+          placeholder="Topic"
           onChange={(e) => handleInputChange('topic', e.target.value)}
-          defaultValue = {userCourseInput?.topic}
+          defaultValue={userCourseInput?.topic}
         />
       </div>
+
+      {/* Textarea description */}
       <div className='mt-5'>
-        <label htmlFor="">🎯 Tell us more about your course , what you want to include</label>
+        <label className="block text-sm md:text-base font-medium text-gray-700">
+          🎯 Tell us more about your course, what you want to include
+        </label>
         <Textarea
-          placeholder={"About your course"}
+          className="w-full mt-2"
+          placeholder="About your course"
           onChange={(e) => handleInputChange('description', e.target.value)}
           defaultValue={userCourseInput?.description}
         />
       </div>
-      {/* text area desc */}
     </div>
   )
 }
 
-export default TopicDescription
+export default TopicDescription;

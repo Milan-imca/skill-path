@@ -18,7 +18,7 @@ const AddCourse = () => {
       </div>
 
       <Link href={userCourseList.length >= 5 ? "/dashboard/upgrade" : "/create-course"}>
-        <Button className='bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-6 py-2 rounded-lg shadow-lg transition-all'>
+        <Button className='bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-5 rounded-lg shadow-lg transition-all'>
           + Create Course
         </Button>
       </Link>
