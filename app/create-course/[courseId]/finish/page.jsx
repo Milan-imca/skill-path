@@ -42,7 +42,7 @@ const FinishScreen = ({ params }) => {
         {process.env.NEXT_PUBLIC_HOST_NAME}/course/view/{course?.courseId}
         <MdOutlineContentCopy
           className='h-5 w-5 cursor-pointer'
-          onClick={async () => await navigator.clipboard.writeText(process.env.NEXT_PUBLIC_HOST_NAME + "/course/view/" + course?.courseId)}
+          onClick={async () => await navigator.clipboard.writeText(process.env.NEXT_PUBLIC_HOST_NAME + "/course/" + course?.courseId + "/start")}
         />
       </h2>
     </div>
@@ -50,3 +50,5 @@ const FinishScreen = ({ params }) => {
 }
 
 export default FinishScreen;
+
+// https://skill-path-ashy.vercel.app/course/3359b854-fa37-42ef-a4cc-fb1ab10a213c/start
