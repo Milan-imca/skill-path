@@ -49,7 +49,7 @@ const CourseCard = ({ course, refreshData, displayUser = false }) => {
             {course?.category}
           </Badge>
           { !displayUser && 
-            <DropDownOptions deleteCourse={() => handleCourseDelete()}>
+            <DropDownOptions deleteCourse={() => handleCourseDelete()} course={course}>
               <FaEllipsisVertical className='text-gray-500 hover:text-gray-700 cursor-pointer' />
             </DropDownOptions>
           }

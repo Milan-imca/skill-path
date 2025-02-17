@@ -8,6 +8,7 @@ import { Clipboard, Check } from 'lucide-react'; // Icons for copy button
 import Navbar from '@/app/components/Navbar';
 import { UserButton } from '@clerk/nextjs';
 import NavbarC from '@/app/components/NavBarC';
+import Link from 'next/link';
 
 const opts = {
   playerVars: {
@@ -15,7 +16,7 @@ const opts = {
   },
 };
 
-const ChapterContent = ({ chapter, content }) => {
+const ChapterContent = ({ chapter, content, params }) => {
 
 
   const [copiedIndex, setCopiedIndex] = useState(null);
@@ -31,10 +32,9 @@ const ChapterContent = ({ chapter, content }) => {
   }, [content]);
 
   return (
-    <>
-
-      <NavbarC />
-
+    <div className='lg:ml-7'>
+      {/* Header  */}
+      <NavbarC params={params} />
 
       <div className="mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10 mt-3">
         {/* Chapter Title */}
@@ -103,8 +103,9 @@ const ChapterContent = ({ chapter, content }) => {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default ChapterContent;
+

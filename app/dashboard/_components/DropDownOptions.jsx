@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MdDeleteForever, MdShare } from "react-icons/md";
+import { MdDeleteForever, MdShare,MdEdit } from "react-icons/md";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import Link from 'next/link';
 
 
 
-const DropDownOptions = ({ children, deleteCourse }) => {
+const DropDownOptions = ({ children, deleteCourse,course }) => {
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -37,11 +37,19 @@ const DropDownOptions = ({ children, deleteCourse }) => {
             className="flex justify-between  text-red-600 gap-1">
             Delete <MdDeleteForever />
           </DropdownMenuItem>
-         
-            <DropdownMenuItem
-              className="flex justify-between  text-blue-600 gap-1">
-              Share<MdShare />
-            </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className="flex justify-between  text-blue-600 gap-1">
+            Share<MdShare />
+          </DropdownMenuItem>
+
+        <Link href={"/create-course/" + course?.courseId + "/finish"}>
+
+          <DropdownMenuItem
+            className="flex justify-between  text-green-600 gap-1">
+            Edit Image<MdEdit />
+          </DropdownMenuItem>
+        </Link>
 
 
         </DropdownMenuContent>
