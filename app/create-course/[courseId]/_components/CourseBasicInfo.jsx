@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react"; // For the loading icon
 const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   const courseName = course?.courseOutput?.["Course Name"] || "Unknown Course Name";
   const Description = course?.courseOutput?.Description;
-  
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false); // Track upload state
 
@@ -23,32 +23,70 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
     }
   }, [course]);
 
+  // const onFileSelected = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   setSelectedFile(URL.createObjectURL(file)); // Show preview
+  //   setLoading(true); // Start loading
+
+  //   try {
+  //     const result = await storage.createFile(
+  //       process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+  //       "unique()",
+  //       file
+  //     );
+  //     const fileId = result.$id;
+  //     const fileUrl = storage.getFileView(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, fileId);
+
+  //     await db
+  //       .update(CourseList)
+  //       .set({ courseBanner: fileUrl })
+  //       .where(eq(CourseList.id, course?.id));
+
+  //     setSelectedFile(fileUrl); // Update state with uploaded file URL
+  //   } catch (error) {
+  //     console.log("Uploading Error:", error);
+  //   } finally {
+  //     setLoading(false); // Stop loading
+  //   }
+  // };
+
+
   const onFileSelected = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setSelectedFile(URL.createObjectURL(file)); // Show preview
-    setLoading(true); // Start loading
+    console.log("Selected file:", file);
+
+    setSelectedFile(URL.createObjectURL(file));
+    setLoading(true);
 
     try {
+      console.log("Uploading to bucket:", process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID);
+
       const result = await storage.createFile(
         process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
         "unique()",
         file
       );
+
+      console.log("Upload result:", result);
+
       const fileId = result.$id;
       const fileUrl = storage.getFileView(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, fileId);
 
-      await db
-        .update(CourseList)
+      console.log("Generated file URL:", fileUrl);
+
+      await db.update(CourseList)
         .set({ courseBanner: fileUrl })
         .where(eq(CourseList.id, course?.id));
 
-      setSelectedFile(fileUrl); // Update state with uploaded file URL
+      setSelectedFile(fileUrl);
     } catch (error) {
-      console.log("Uploading Error:", error);
+      console.error("Uploading Error:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
