@@ -51,7 +51,7 @@ export default function SignupPage() {
         {/* Custom Footer - Login Redirect */}
         <p className="mt-4 text-sm text-gray-600">
           Already have an account?  
-          <Link href="/signin" className="text-blue-600 hover:underline ml-1">Sign in</Link>
+          <Link href="/sign-in" className="text-blue-600 hover:underline ml-1">Sign in</Link>
         </p>
       </div>
     </div>

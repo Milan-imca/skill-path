@@ -12,7 +12,7 @@ const Navbar = () => {
     { id: 1, name: "Home", icon: <HiHome />, path: "/dashboard" },
     { id: 2, name: "Explore", icon: <HiSquare3Stack3D />, path: "/dashboard/explore" },
     // { id: 3, name: "Upgrade", icon: <HiCurrencyDollar />, path: "/dashboard/upgrade" },
-    // { id: 4, name: "Logout", icon: <HiArrowLeftEndOnRectangle />, path: "/dashboard/logout" },
+    { id: 4, name: "Logout", icon: <HiArrowLeftEndOnRectangle />, path: "/" },
   ];
 
   return (
@@ -50,7 +50,13 @@ const Navbar = () => {
         </Link>
 
         {/* ✅ User Button (Clerk) */}
-        <UserButton />
+        <UserButton
+          appearance={{
+            elements: {
+              userButtonPopoverFooter: "hidden", // Hides the footer
+            }
+          }}
+        />
       </div>
     </>
   );

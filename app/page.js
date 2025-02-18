@@ -264,7 +264,7 @@ export default function Home() {
             Transform your knowledge into structured, engaging courses in minutes. No coding, no hassle – just AI magic!
           </p>
           <div className="mt-6 flex justify-center gap-4">
-          <Link href={"/dashboard"}>
+          <Link href={"/sign-up"}>
 
             <motion.button
               whileHover={{ scale: 1.1 }}
