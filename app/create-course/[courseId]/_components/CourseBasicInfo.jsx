@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react"; // For the loading icon
 const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   const courseName = course?.courseOutput?.["Course Name"] || "Unknown Course Name";
   const Description = course?.courseOutput?.Description;
-  
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false); // Track upload state
 
@@ -36,6 +36,8 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
         "unique()",
         file
       );
+      console.log("Upload result:", result); // Log result to check on Vercel
+
       const fileId = result.$id;
       const fileUrl = storage.getFileView(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, fileId);
 
@@ -46,7 +48,7 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
 
       setSelectedFile(fileUrl); // Update state with uploaded file URL
     } catch (error) {
-      console.log("Uploading Error:", error);
+      console.error("Upload Error:", error); // Log errors for debugging
     } finally {
       setLoading(false); // Stop loading
     }
