@@ -29,9 +29,7 @@ const Course = ({ params: paramsPromise }) => {
 
   return (
     <div>
-      <div className='md:w-[1000PX] mx-auto mt-2'>
-        <Navbar />
-      </div>
+      
       <div className='px-10 p-10 md:px-20 lg:px-44'>
         <CourseBasicInfo course={course} edit={false} />
         <CourseDetails course={course} />

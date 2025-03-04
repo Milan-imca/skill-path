@@ -12,10 +12,10 @@ const DashboardLayout = ({ children }) => {
   return (
     <UserCourseListContext.Provider value={{ userCourseList, setUserCourseList }}>
       <div className=''>
-        <div className='md:w-64 hidden md:block'>
-          <SideBar />
+        <div className='hidden md:block'>
+          {/* <SideBar /> */}
         </div>
-        <div className='md:ml-72 p-5 '>
+        <div className=' p-5 '>
           {/* <Header /> */}
           <div className=''>
             {children}

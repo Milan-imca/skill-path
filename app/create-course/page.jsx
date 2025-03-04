@@ -29,7 +29,7 @@ const CreateCourse = () => {
 
   const checkStatus = () => {
     if (activeIndex === 0) return !(userCourseInput?.category?.trim());
-    if (activeIndex === 1) return !(userCourseInput?.topic?.trim() && userCourseInput?.description?.trim());
+    if (activeIndex === 1) return !(userCourseInput?.topic?.trim());
     if (activeIndex === 2) return !(userCourseInput?.level && userCourseInput?.duration && userCourseInput?.displayVideo && userCourseInput?.noOfChapters);
     return false;
   };

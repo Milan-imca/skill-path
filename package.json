@@ -32,6 +32,7 @@
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.468.0",
     "next": "15.1.0",
+    "next-themes": "^0.4.4",
     "pg": "^8.13.1",
     "prismjs": "^1.29.0",
     "react": "^18.3.1",
@@ -39,7 +40,9 @@
     "react-icons": "^5.4.0",
     "react-intersection-observer": "^9.15.1",
     "react-markdown": "^9.0.3",
+    "react-toastify": "^11.0.5",
     "react-youtube": "^10.1.0",
+    "sonner": "^2.0.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uuid4": "^2.0.3"

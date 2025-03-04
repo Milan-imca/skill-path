@@ -23,9 +23,20 @@ import Link from 'next/link';
 
 
 const DropDownOptions = ({ children, deleteCourse,course }) => {
+  
 
   const [openDialog, setOpenDialog] = useState(false);
 
+  const handleShareClick = async () => {
+    const link = `${process.env.NEXT_PUBLIC_HOST_NAME}/course/${course?.courseId}/start`;
+    
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 
   return (
     <div>
@@ -38,7 +49,10 @@ const DropDownOptions = ({ children, deleteCourse,course }) => {
             Delete <MdDeleteForever />
           </DropdownMenuItem>
 
+          
+
           <DropdownMenuItem
+          onClick={handleShareClick}
             className="flex justify-between  text-blue-600 gap-1">
             Share<MdShare />
           </DropdownMenuItem>

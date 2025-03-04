@@ -17,4 +17,5 @@ const CreateCourseLayout = ({ children }) => {
   )
 }
 
-export default CreateCourseLayout
+export default CreateCourseLayout;
+

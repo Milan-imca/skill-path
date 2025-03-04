@@ -1,14 +1,11 @@
-"use client"
-import React, { use, useEffect, useState } from 'react';
-import Prism from 'prismjs';
-import 'prismjs/themes/prism-okaidia.css'; // Dark theme
-import YouTube from 'react-youtube';
-import Markdown from 'react-markdown';
-import { Clipboard, Check } from 'lucide-react'; // Icons for copy button
-import Navbar from '@/app/components/Navbar';
-import { UserButton } from '@clerk/nextjs';
-import NavbarC from '@/app/components/NavBarC';
-import Link from 'next/link';
+"use client";
+import React, { useEffect, useState } from "react";
+import Prism from "prismjs";
+import "prismjs/themes/prism-okaidia.css"; // Dark theme
+import YouTube from "react-youtube";
+import Markdown from "react-markdown";
+import { Clipboard, Check } from "lucide-react"; // Icons for copy button
+import { CourseProvider } from "@/app/_context/CourseContext";
 
 const opts = {
   playerVars: {
@@ -16,9 +13,7 @@ const opts = {
   },
 };
 
-const ChapterContent = ({ chapter, content, params }) => {
-
-
+const ChapterContent = ({ chapter, content }) => {
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const handleCopy = (code, index) => {
@@ -32,80 +27,87 @@ const ChapterContent = ({ chapter, content, params }) => {
   }, [content]);
 
   return (
-    <div className='lg:ml-7'>
-      {/* Header  */}
-      <NavbarC params={params} />
+    <CourseProvider>
+      <div className="mt-20 ">
+        {/* ✅ Full-Width Content Section */}
+        <div className="w-full max-w-7xl  mx-auto">
 
-      <div className="mx-auto bg-white shadow-lg rounded-lg p-6 md:p-10 mt-3">
-        {/* Chapter Title */}
-        <h2 className="text-3xl font-bold text-blue-600 mb-4">{chapter?.['Chapter Name']}</h2>
-        <p className="text-gray-600 text-lg mb-6 leading-relaxed">{chapter?.about}</p>
+          {/* ✅ Main Content Area */}
+          <div className="w-full bg-white shadow-md rounded-lg p-5">
+            {/* ✅ Chapter Title */}
+            <h2 className="text-4xl font-extrabold text-blue-700 mb-4 text-center lg:text-left">
+              {chapter?.["Chapter Name"]}
+            </h2>
+            <p className="text-gray-600 text-lg mb-6 leading-relaxed text-center lg:text-left">
+              {chapter?.about}
+            </p>
 
-        {/* YouTube Video*/}
-
-        {content?.videoId && (
-          <div className="flex justify-center items-center w-full">
-            <div className="w-full max-w-4xl">
-              <div className="relative overflow-hidden aspect-video">
-                <YouTube videoId={content.videoId} opts={{
-                  width: "100%",  // Ensures full width
-                  height: "100%", // Ensures full height
-                  playerVars: {
-                    autoplay: 0,   // Prevents autoplay
-                    rel: 0,        // Prevents showing related videos
-                    modestbranding: 1, // Hides YouTube logo for a cleaner look
-                  }
-                }} className="w-full h-full" />
+            {/* ✅ Video Section (Fully Responsive) */}
+            {content?.videoId && (
+              <div className="relative w-[90vw] sm:w-[50vw] aspect-video rounded-lg overflow-hidden shadow-lg z-0 mx-auto">
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${content.videoId}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
               </div>
+            )}
+
+            {/* ✅ Chapter Content */}
+            <div className="mt-8">
+              <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center lg:text-left">
+                {content?.content.chapterTitle}
+              </h1>
+
+              {/* ✅ Sections */}
+              {content?.content.sections.map((section, index) => (
+                <div
+                  key={index}
+                  className="mb-10 bg-gray-100 p-5 rounded-lg shadow-md border-l-4 border-blue-500"
+                >
+                  {/* ✅ Section Title */}
+                  <h2 className="text-2xl font-semibold text-blue-600 mb-3">
+                    {section.title}
+                  </h2>
+
+                  {/* ✅ Explanation */}
+                  <Markdown className="text-gray-700 leading-relaxed text-lg">
+                    {section.explanation}
+                  </Markdown>
+
+                  {/* ✅ Code Block */}
+                  {section.codeExample && (
+                    <div className="relative bg-gray-900 text-white rounded-lg shadow-lg mt-4">
+                      {/* ✅ Copy Button */}
+                      <button
+                        onClick={() => handleCopy(section.codeExample.trim(), index)}
+                        className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm flex items-center gap-1"
+                      >
+                        {copiedIndex === index ? <Check size={16} /> : <Clipboard size={16} />}
+                        {copiedIndex === index ? "Copied!" : "Copy"}
+                      </button>
+
+                      {/* ✅ Scrollable Code Container */}
+                      <div className="p-4 overflow-x-auto max-h-64">
+                        <pre className="whitespace-pre-wrap text-sm">
+                          <code className="language-javascript">
+                            {section.codeExample.trim().replace(/<precode>|<\/precode>/g, "")}
+                          </code>
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        )}
-
-
-
-
-
-        {/* Chapter Content */}
-
-        <div className="mt-6">
-          {/* Chapter Title */}
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">{content?.content.chapterTitle}</h1>
-
-          {/* Sections */}
-          {content?.content.sections.map((section, index) => (
-            <div key={index} className="mb-8 border-l-4 border-blue-500 pl-4">
-              <h2 className="text-xl font-semibold text-blue-500 mb-2">{section.title}</h2>
-              <Markdown className="text-gray-700 leading-relaxed">{section.explanation}</Markdown>
-
-              {/* Code Block */}
-              {section.codeExample && (
-                <div className="relative bg-gray-900 text-white rounded-lg shadow-lg mt-4">
-                  {/* Copy Button */}
-                  <button
-                    onClick={() => handleCopy(section.codeExample.trim(), index)}
-                    className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded-md text-sm flex items-center gap-1"
-                  >
-                    {copiedIndex === index ? <Check size={16} /> : <Clipboard size={16} />}
-                    {copiedIndex === index ? "Copied!" : "Copy"}
-                  </button>
-
-                  {/* Scrollable Code Container */}
-                  <div className="p-4 overflow-x-auto max-h-64">
-                    <pre className="whitespace-pre">
-                      <code className="language-javascript">
-                        {section.codeExample.trim().replace(/<precode>|<\/precode>/g, '')}
-                      </code>
-                    </pre>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
         </div>
       </div>
-    </div>
+    </CourseProvider>
   );
 };
 
 export default ChapterContent;
-

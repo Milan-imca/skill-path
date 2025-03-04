@@ -4,25 +4,31 @@ import { CourseList } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
 import { and, eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import CourseBasicInfo from "../_components/CourseBasicInfo";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { Loader2 } from "lucide-react"; // Importing a loading spinner
+import Navbar from "@/app/components/Navbar";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
-const FinishScreen = ({ params }) => {
+
+const FinishScreen = ({ params: paramsPromise,refreshData}) => {
+  const params = use(paramsPromise)
   const { user } = useUser();
   const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (params) {
+    console.log("FinishScreen Params:", params); // Debugging log
+    if (params?.courseId && user?.primaryEmailAddress?.emailAddress) {
       GetCourse();
     }
-  }, [params, user]);
+  }, [params?.courseId, user?.primaryEmailAddress?.emailAddress]);
 
   const GetCourse = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const result = await db
         .select()
@@ -30,50 +36,72 @@ const FinishScreen = ({ params }) => {
         .where(
           and(
             eq(CourseList.courseId, params?.courseId),
-            eq(CourseList?.createdBy, user?.primaryEmailAddress?.emailAddress)
+            eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
           )
         );
-      setCourse(result[0]);
+
+      if (result.length > 0) {
+        setCourse(result[0]);
+      } else {
+        console.warn("Course not found!");
+      }
     } catch (error) {
       console.error("Error fetching course:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
+    }
+  };
+  const courseUrl = `${process.env.NEXT_PUBLIC_HOST_NAME}/course/${course?.courseId}/start`;
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(courseUrl);
+      toast.success("Copied Successful!", {
+              position: "top-right",
+              autoClose: 3000,
+            });
+    } catch (error) {
+      toast.success("Failed to copy!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
   return (
-    <div className="px-10 md:px-20 lg:px-44 my-7">
-      {loading ? (
-        // Loader UI while content is fetching
-        <div className="flex flex-col items-center justify-center h-[50vh]">
-          <Loader2 className="animate-spin text-gray-500 w-10 h-10" />
-          <p className="text-gray-500 mt-3">Loading course details...</p>
-        </div>
-      ) : (
-        <>
-          <h2 className="text-center font-bold text-2xl my-3 text-primary">
-            Congrats! Your course is Ready 🎉
-          </h2>
-          <CourseBasicInfo course={course} refreshData={() => GetCourse()} />
-          <h2 className="mt-3">Course URL</h2>
-          <h2 className="text-gray-400 border p-2 rounded-md flex gap-5 items-center justify-between">
-            {process.env.NEXT_PUBLIC_HOST_NAME + "/course/" + course?.courseId + "/start"}
-            <MdOutlineContentCopy
-              className="h-5 w-5 cursor-pointer"
-              onClick={async () =>
-                await navigator.clipboard.writeText(
-                  process.env.NEXT_PUBLIC_HOST_NAME + "/course/" + course?.courseId + "/start"
-                )
-              }
-            />
-          </h2>
-        </>
-      )}
-    </div>
+    <>
+      <div className="p-5">
+        <Navbar />
+        <ToastContainer />
+      </div>
+      <div className="px-10 md:px-20 lg:px-44 my-7">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center h-[50vh]">
+            <Loader2 className="animate-spin text-gray-500 w-10 h-10" />
+            <p className="text-gray-500 mt-3">Loading course details...</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-center font-bold text-2xl my-3 text-primary">
+              🎉 Congrats! Your course is Ready
+            </h2>
+
+            <CourseBasicInfo course={course} refreshData={refreshData} />
+
+            <h2 className="mt-3 text-lg font-semibold">Course URL</h2>
+
+            <div className="border p-3 rounded-md flex flex-wrap gap-3 items-center justify-between bg-gray-100 dark:bg-gray-800">
+              <span className="text-gray-600 dark:text-gray-300 break-all">{courseUrl}</span>
+              <MdOutlineContentCopy
+                className="h-6 w-6 cursor-pointer text-primary hover:text-primary-dark transition-all"
+                onClick={copyToClipboard}
+              />
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
 export default FinishScreen;
-
-
-// https://skill-path-ashy.vercel.app/course/3359b854-fa37-42ef-a4cc-fb1ab10a213c/start

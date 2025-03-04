@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { db } from "@/configs/db";
 import { CourseList } from "@/configs/schema";
@@ -6,36 +6,37 @@ import CourseCard from "../_components/CourseCard";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Navbar from "@/app/components/Navbar";
 
 const Explore = () => {
   const [courseList, setCourseList] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
-  const [loading, setLoading] = useState(true); // Full-screen loader state
-  const [hasMore, setHasMore] = useState(true); // To check if more courses exist
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     GetAllCourse();
   }, [pageIndex]);
 
   const GetAllCourse = async () => {
-    setLoading(true); // Show loader before fetching
-    const result = await db.select().from(CourseList).limit(9).offset(pageIndex * 9);
-    
+    setLoading(true);
+    const result = await db.select().from(CourseList).limit(8).offset(pageIndex * 8);
+
     setCourseList(result);
-    setLoading(false); // Hide loader after fetching
-    setHasMore(result.length === 9); // Disable "Next" if no more data
+    setLoading(false);
+    setHasMore(result.length === 8);
   };
 
   return (
     <>
-      {/* Full-Screen Loader */}
+      <Navbar />
+      
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
           <Image src="/loading2.gif" alt="Loading..." width={120} height={120} />
         </div>
       )}
 
-      {/* Main Content */}
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
@@ -47,7 +48,8 @@ const Explore = () => {
           Discover AI-powered projects created by our talented community 🚀
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Grid Layout for 2 Rows Only */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {courseList.length > 0 ? (
             courseList.map((course, index) => (
               <motion.div 
@@ -65,7 +67,7 @@ const Explore = () => {
           )}
         </div>
 
-        {/* Pagination Buttons */}
+        {/* Pagination */}
         <div className="flex justify-between items-center mt-8">
           <Button
             variant="outline"

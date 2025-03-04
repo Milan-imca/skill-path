@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "@/configs/db";
 import { Chapters, CourseList } from "@/configs/schema";
 import { and, eq } from "drizzle-orm";
@@ -13,10 +13,9 @@ import Image from "next/image";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import Link from "next/link";
+import NavbarC from "@/app/components/NavBarC";
 
-const CourseStart = ({ params: paramsPromise }) => {
-  const params = use(paramsPromise);
-
+const CourseStart = ({ params }) => {
   const [course, setCourse] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [chapterContent, setChapterContent] = useState(null);
@@ -27,7 +26,10 @@ const CourseStart = ({ params: paramsPromise }) => {
   useEffect(() => {
     const fetchCourseAndChapter = async () => {
       setLoading(true);
-      const result = await db.select().from(CourseList).where(eq(CourseList?.courseId, params?.courseId));
+      const result = await db
+        .select()
+        .from(CourseList)
+        .where(eq(CourseList?.courseId, params?.courseId));
 
       if (result?.length > 0) {
         const courseData = result[0];
@@ -37,7 +39,8 @@ const CourseStart = ({ params: paramsPromise }) => {
           setCurrentIndex(0);
           setSelectedChapter(courseData.courseOutput.Chapters[0]);
 
-          const chapterContentResult = await db.select()
+          const chapterContentResult = await db
+            .select()
             .from(Chapters)
             .where(and(eq(Chapters.chapterId, 0), eq(Chapters.courseId, courseData?.courseId)));
 
@@ -56,7 +59,8 @@ const CourseStart = ({ params: paramsPromise }) => {
       setCurrentIndex(newIndex);
       setSelectedChapter(course.courseOutput.Chapters[newIndex]);
 
-      const contentResult = await db.select()
+      const contentResult = await db
+        .select()
         .from(Chapters)
         .where(and(eq(Chapters.chapterId, newIndex), eq(Chapters.courseId, course?.courseId)));
 
@@ -67,61 +71,59 @@ const CourseStart = ({ params: paramsPromise }) => {
 
   return (
     <>
+      {/* ✅ Loading Screen */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
           <Image src="/loading2.gif" alt="Loading..." width={120} height={120} />
         </div>
       )}
 
+      {/* ✅ Navbar (fixed at the top) */}
+      <NavbarC course={course} updateChapter={updateChapter} params={params} />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex min-h-screen bg-gray-50"
+        className="flex flex-col lg:flex-row min-h-screen bg-gray-100"
       >
-        {/* Sidebar */}
-        <div className="hidden md:block fixed h-[95vh] md:w-72 p-6 bg-white text-gray-900 shadow-lg rounded-2xl m-2 bottom-2 left-2 border border-gray-200">
-          <h1 className="text-3xl font-bold tracking-wide mb-6 text-gray-800">SKILLPATH</h1>
-          <Separator className="my-4" />
-          <h2 className="text-lg font-semibold">{course?.courseOutput?.["Course Name"]}</h2>
-          <Separator className="my-3" />
-          <div className="space-y-2">
-            {course?.courseOutput?.Chapters?.map((chapter, index) => (
-              <>
-                <div
-                  key={index}
-                  onClick={() => updateChapter(index)}
-                  className="rounded-lg cursor-pointer transition-all bg-gray-100 hover:bg-blue-300 hover:text-white shadow-sm"
-                >
-                  <ChapterListCard chapter={chapter} index={index} />
-                </div>
-                
+        
 
-              </>
-            ))}
-          </div>
-          <Link href={"/dashboard"}>
-                  <Button className="mt-3 px-10"> <FaArrowAltCircleLeft /> Back to Dashboard</Button>
-                </Link>
-        </div>
-
-        {/* Content Section */}
-        <div className="flex-1 md:ml-72 p-5 mt-2 w-full">
+        {/* ✅ Main Content Section */}
+        <div className="flex flex-col min-h-screen bg-gray-50 w-full">
           {course && selectedChapter && chapterContent ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <ChapterContent chapter={selectedChapter} content={chapterContent} params={params} />
             </motion.div>
           ) : (
-            <p className="text-center text-gray-500">No content available.</p>
+            <div className="flex flex-col items-center justify-center text-center p-6 bg-red-50 border border-red-200 rounded-lg shadow-md">
+              <p className="text-lg font-semibold text-red-600">⚠️ Something went wrong!</p>
+              <p className="text-sm text-gray-700 mt-1">Please try again after some time.</p>
+            </div>
+
           )}
 
-          {/* Navigation */}
+          {/* ✅ Navigation (Responsive) */}
           <div className="flex justify-between mt-6 mb-6 p-2">
-            <Button variant="outline" disabled={currentIndex === 0} onClick={() => updateChapter(currentIndex - 1)}>
-              <ChevronLeft className="h-5 w-5 mr-2" /> Previous
+            <Button
+              variant="outline"
+              disabled={currentIndex === 0}
+              onClick={() => updateChapter(currentIndex - 1)}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="h-5 w-5" /> Previous
             </Button>
-            <Button variant="outline" disabled={currentIndex === course?.courseOutput?.Chapters?.length - 1} onClick={() => updateChapter(currentIndex + 1)}>
-              Next <ChevronRight className="h-5 w-5 ml-2" />
+            <Button
+              variant="outline"
+              disabled={currentIndex === course?.courseOutput?.Chapters?.length - 1}
+              onClick={() => updateChapter(currentIndex + 1)}
+              className="flex items-center gap-2"
+            >
+              Next <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
         </div>

@@ -20,7 +20,7 @@ import { CourseList } from '@/configs/schema';
 import { eq } from 'drizzle-orm';
 
 
-const EditCourseBasicInfo = ({course,refreshData}) => {
+const EditCourseBasicInfo = ({ course, refreshData }) => {
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
 
@@ -28,10 +28,10 @@ const EditCourseBasicInfo = ({course,refreshData}) => {
   useEffect(() => {
     setTitle(course?.courseOutput?.["Course Name"]);
     setDescription(course?.courseOutput?.Description)
-  },[course])
+  }, [course])
 
 
-  const onUpdateChange = async() => {
+  const onUpdateChange = async () => {
 
     if (course?.courseOutput) {
       course.courseOutput["Course Name"] = title; // Update the property directly
@@ -39,11 +39,11 @@ const EditCourseBasicInfo = ({course,refreshData}) => {
       console.log("Updated Course Name:", course.courseOutput["Course Name"]);
       console.log("Updated Course Description:", course.courseOutput.Description);
       const result = await db.update(CourseList).set({
-        courseOutput:course?.courseOutput
-      }).where(eq(CourseList?.id,course?.id))
-      .returning({
-        id:CourseList.id
-      })
+        courseOutput: course?.courseOutput
+      }).where(eq(CourseList?.id, course?.id))
+        .returning({
+          id: CourseList.id
+        })
       console.log(result)
     } else {
       console.error("courseOutput is undefined, cannot update 'Course Name'.");
@@ -68,15 +68,22 @@ const EditCourseBasicInfo = ({course,refreshData}) => {
           <DialogDescription>
             <div className='mt-3'>
               <label>Course Title</label>
-              <Input 
-              defaultValue={course?.courseOutput?.["Course Name"]}
-              onChange={(e) => setTitle(e?.target.value)}
+              <Input
+                defaultValue={course?.courseOutput?.["Course Name"]}
+                onChange={(e) => setTitle(e?.target.value)}
+                placeholder="Your Course Title"
 
               />
             </div>
             <div>
               <label>Description</label>
-              <Textarea className="h-40"defaultValue={course?.courseOutput?.Description}  onChange={(e) => setDescription(e?.target.value)}/>
+              <Textarea 
+              className="h-40" 
+              defaultValue={course?.courseOutput?.Description} 
+              onChange={(e) => setDescription(e?.target.value)} 
+              placeholder="Enter your desired decription"
+
+              />
             </div>
           </DialogDescription>
         </DialogHeader>
