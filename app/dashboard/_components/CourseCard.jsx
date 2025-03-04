@@ -30,7 +30,7 @@ const CourseCard = ({ course, refreshData, displayUser = false }) => {
   };
 
   return (
-    <Card className='shadow-lg rounded-lg transition-transform duration-200 hover:scale-105 w-full max-w-sm md:max-w-xs lg:max-w-[300px]'>
+    <Card className='shadow-lg rounded-lg transition-transform duration-200 hover:scale-105 max-w-sm md:max-w-xs w-[300px]'>
     {/* course/6d24aa01-fa32-4b27-8a4b-a4e6069cbcf7/start */}
       <Link href={"/course/" + course?.courseId + "/start"}  prefetch={true}>
         <Image

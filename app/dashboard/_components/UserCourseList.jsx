@@ -46,7 +46,7 @@ const UserCourseList = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="grid gap-6 mt-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center"
+          className="mt-5 grid gap-6 place-items-center grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
         >
           {courseList?.length > 0 ? (
             courseList.map((course, index) => (

@@ -51,7 +51,7 @@ const NavbarC = ({ course, updateChapter }) => {
       <h1 className="text-2xl font-bold">SkillPath</h1>
 
       {/* ✅ User Profile Button */}
-      <UserButton />
+      <UserButton appearance={{ elements: { userButtonPopoverFooter: "hidden" } }} />
     </div>
   );
 };

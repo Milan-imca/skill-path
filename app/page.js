@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -134,6 +135,85 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+
+      <motion.footer
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-indigo-900 text-gray-300 mt-16"
+      >
+        <div className="max-w-6xl mx-auto px-4 md:px-10 py-10 grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+
+          {/* About Section */}
+          <div>
+            <h3 className="text-white text-lg font-semibold">About SkillPath</h3>
+            <p className="mt-2 text-sm">
+              SkillPath is an AI-powered course creation platform that helps educators and professionals design structured, engaging courses effortlessly.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-white text-lg font-semibold">Quick Links</h3>
+            <ul className="mt-2 space-y-2">
+              <li>
+                <Link href="/about" className="hover:text-white transition">About Us</Link>
+              </li>
+              <li>
+                <Link href="/courses" className="hover:text-white transition">Courses</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition">Contact</Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Social Media */}
+          <div>
+            <h3 className="text-white text-lg font-semibold">Follow Us</h3>
+            <div className="mt-3 flex gap-4">
+              <Link href="https://facebook.com" target="_blank">
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <span className="text-2xl hover:text-white transition">
+                    <Image src={"/fb.png"} height={30} width={30}/>
+                  </span>
+                </motion.div>
+              </Link>
+              <Link href="https://twitter.com" target="_blank">
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <span className="text-2xl hover:text-white transition">
+                  <Image src={"/x.png"} height={30} width={30}/>
+                  </span>
+                </motion.div>
+              </Link>
+              <Link href="https://linkedin.com" target="_blank">
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <span className="text-2xl hover:text-white transition">
+                  <Image src={"/linkedin.png"} height={30} width={30}/>
+                  </span>
+                </motion.div>
+              </Link>
+              <Link href="https://instagram.com" target="_blank">
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                  <span className="text-2xl hover:text-white transition">
+                  <Image src={"/insta.png"} height={30} width={30}/>
+                  </span>
+                </motion.div>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Copyright Section */}
+        <div className="bg-indigo-900 text-center py-3 text-sm">
+          © {new Date().getFullYear()} SkillPath. All Rights Reserved.
+        </div>
+      </motion.footer>
+
     </div>
   );
 }
