@@ -11,8 +11,12 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react"; // For the loading icon
 import { toast } from "react-toastify"; // ✅ Import React Toastify
 import "react-toastify/dist/ReactToastify.css"; // ✅ Import styles
+import { useRouter } from "next/navigation";
+
 
 const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
+  const router = useRouter()
+  
   const courseName = course?.courseOutput?.["Course Name"] || "Give your custom Course Name";
   const Description = course?.courseOutput?.Description || "Give your custom Description";
 
@@ -24,6 +28,12 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
       setSelectedFile(course?.courseBanner);
     }
   }, [course]);
+
+  const handleStartCourse = () => {
+    router.push(`/course/${course?.courseId}/start`);
+    router.refresh(); // ✅ Forces the page to refresh
+  };
+  
 
   const onFileSelected = async (event) => {
     const file = event.target.files[0];
@@ -78,9 +88,11 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
           <h2 className="mt-4 md:mt-5">
             <span className="font-semibold">Category</span>: {course?.category}
           </h2>
-          <Link href={`/course/${course?.courseId}/start`}>
-            <Button className="w-full mt-4 md:mt-5">Start</Button>
-          </Link>
+          {/* <Link href={`/course/${course?.courseId}/start`}> */}
+            <Button className="w-full mt-4 md:mt-5" disabled={loading}  onClick={handleStartCourse}>
+              {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Start"}
+            </Button>
+          {/* </Link> */}
         </div>
         <div>
           <label htmlFor="upload-image" className="relative cursor-pointer block w-full">
