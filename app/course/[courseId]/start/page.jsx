@@ -100,7 +100,7 @@ const CourseStart = ({ params }) => {
               <ChapterContent chapter={selectedChapter} content={chapterContent} params={params} />
             </motion.div>
           ) : (
-            <div className="flex flex-col items-center justify-center text-center p-6 bg-red-50 border border-red-200 rounded-lg shadow-md">
+            <div className="mt-20 flex flex-col items-center justify-center text-center p-6 bg-red-50 border border-red-200 rounded-lg shadow-md">
               <p className="text-lg font-semibold text-red-600">⚠️ Something went wrong!</p>
               <p className="text-sm text-gray-700 mt-1">Please try again after some time.</p>
             </div>

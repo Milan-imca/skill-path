@@ -20,46 +20,46 @@ const FinishScreen = ({ params: paramsPromise,refreshData}) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   console.log("FinishScreen Params:", params); // Debugging log
-  //   if (params?.courseId && user?.primaryEmailAddress?.emailAddress) {
-  //     GetCourse();
-  //   }
-  // }, [params?.courseId, user?.primaryEmailAddress?.emailAddress]);
-
   useEffect(() => {
     console.log("FinishScreen Params:", params); // Debugging log
+    if (params?.courseId && user?.primaryEmailAddress?.emailAddress) {
+      GetCourse();
+    }
+  }, [params?.courseId, user?.primaryEmailAddress?.emailAddress]);
+
+  // useEffect(() => {
+  //   console.log("FinishScreen Params:", params); // Debugging log
   
-    if (!params?.courseId || !user?.primaryEmailAddress?.emailAddress) return;
+  //   if (!params?.courseId || !user?.primaryEmailAddress?.emailAddress) return;
   
-    const checkAndRedirect = async () => {
-      const result = await db
-        .select()
-        .from(CourseList)
-        .where(
-          and(
-            eq(CourseList.courseId, params?.courseId),
-            eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
-          )
-        );
+  //   const checkAndRedirect = async () => {
+  //     const result = await db
+  //       .select()
+  //       .from(CourseList)
+  //       .where(
+  //         and(
+  //           eq(CourseList.courseId, params?.courseId),
+  //           eq(CourseList.createdBy, user?.primaryEmailAddress?.emailAddress)
+  //         )
+  //       );
   
-      if (result.length > 0) {
-        const courseData = result[0];
-        setCourse(courseData);
+  //     if (result.length > 0) {
+  //       const courseData = result[0];
+  //       setCourse(courseData);
   
-        // If course is already in progress, redirect to Start Screen
-        if (courseData.status === "in_progress") {
-          router.push(`/course/${params?.courseId}/start`);
-        }
-      } else {
-        console.warn("Course not found!");
-      }
+  //       // If course is already in progress, redirect to Start Screen
+  //       if (courseData.status === "in_progress") {
+  //         router.push(`/course/${params?.courseId}/start`);
+  //       }
+  //     } else {
+  //       console.warn("Course not found!");
+  //     }
   
-      setLoading(false);
-    };
+  //     setLoading(false);
+  //   };
   
-    checkAndRedirect();
-  }, [params?.courseId, user?.primaryEmailAddress?.emailAddress, router]);
+  //   checkAndRedirect();
+  // }, [params?.courseId, user?.primaryEmailAddress?.emailAddress, router]);
 
   const GetCourse = async () => {
     setLoading(true);

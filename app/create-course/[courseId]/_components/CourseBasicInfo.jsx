@@ -11,17 +11,40 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react"; // For the loading icon
 import { toast } from "react-toastify"; // ✅ Import React Toastify
 import "react-toastify/dist/ReactToastify.css"; // ✅ Import styles
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   const router = useRouter()
-  
+  const pathname = usePathname()
+
   const courseName = course?.courseOutput?.["Course Name"] || "Give your custom Course Name";
   const Description = course?.courseOutput?.Description || "Give your custom Description";
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false); // Track upload state
+  const [isNavigating, setIsNavigating] = useState(false)
+
+  // List of placeholder images
+  const placeholderImages = [
+    "/p1.jpg",
+    "/p2.jpg",
+    "/p3.jpg",
+    "/p4.jpg",
+  ];
+
+  // Function to get a consistent placeholder based on course ID
+const getPlaceholderImage = (id) => {
+  if (!id) return placeholderImages[0]; // Default if no ID
+  const index = parseInt(id, 36) % placeholderImages.length; // Hash-like function
+  return placeholderImages[index];
+};
+
+  useEffect(() => {
+    if (pathname !== `/course/${course?.courseId}/start`) {
+      setIsNavigating(false);
+    }
+  }, [pathname, course?.courseId]);
 
   useEffect(() => {
     if (course) {
@@ -30,10 +53,10 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
   }, [course]);
 
   const handleStartCourse = () => {
+    setIsNavigating(true); // Start showing the spinner
     router.push(`/course/${course?.courseId}/start`);
-    router.refresh(); // ✅ Forces the page to refresh
   };
-  
+
 
   const onFileSelected = async (event) => {
     const file = event.target.files[0];
@@ -89,9 +112,9 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
             <span className="font-semibold">Category</span>: {course?.category}
           </h2>
           {/* <Link href={`/course/${course?.courseId}/start`}> */}
-            <Button className="w-full mt-4 md:mt-5" disabled={loading}  onClick={handleStartCourse}>
-              {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Start"}
-            </Button>
+          <Button className="w-full mt-4 md:mt-5" disabled={loading || isNavigating} onClick={handleStartCourse}>
+            {(loading || isNavigating) ? <Loader2 className="animate-spin w-5 h-5" /> : "Start"}
+          </Button>
           {/* </Link> */}
         </div>
         <div>
@@ -102,7 +125,7 @@ const CourseBasicInfo = ({ course, refreshData, edit = true }) => {
               </div>
             ) : (
               <Image
-                src={selectedFile || "/placeholder.jpeg"}
+                src={selectedFile || getPlaceholderImage(course?.id)}
                 width={500}
                 height={500}
                 alt="course-placeholder"

@@ -17,5 +17,21 @@ export default [
     icon: "creative.gif",
     prompt: ""
   },
+  {
+    id:4,
+    name:"Science",
+    icon:"sci.gif",
+  },
+  {
+    id:5,
+    name:"Maths",
+    icon:"maths.gif",
+  },
+  {
+    id: 6,
+    name: "Others",
+    icon: "others.png",
+    prompt: ""
+  },
 
 ]

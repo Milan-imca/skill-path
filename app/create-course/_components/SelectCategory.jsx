@@ -69,7 +69,7 @@ const SelectCategory = () => {
                 src={item.icon} 
                 width={100} 
                 height={100} 
-                className="w-20 md:w-28 h-20 md:h-28 object-contain" 
+                className="w-20 md:w-30 h-20 md:h-30 object-contain" 
                 unoptimized 
                 alt='GIF-ICON' 
               />

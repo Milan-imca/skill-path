@@ -8,9 +8,11 @@ import { Separator } from "@/components/ui/separator";
 import { Menu } from "lucide-react";
 import ChapterListCard from "../course/[courseId]/start/_components/ChapterListCard";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const NavbarC = ({ course, updateChapter }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full max-w-7xl  mx-auto px-4 sm:px-6 lg:px-12 py-4 bg-white/30 backdrop-blur-md border border-white/30 shadow-lg rounded-none lg:rounded-xl">
@@ -39,16 +41,16 @@ const NavbarC = ({ course, updateChapter }) => {
               </div>
             ))}
           </div>
-          <Link href={"/dashboard"}>
-            <Button className="mt-3 px-10">
+          {/* <Link href={"/dashboard"}> */}
+            <Button className="mt-3 px-10" onClick={() => router.push("/dashboard")}>
               <FaArrowAltCircleLeft /> Back to Dashboard
             </Button>
-          </Link>
+          {/* </Link> */}
         </SheetContent>
       </Sheet>
 
       {/* ✅ Brand Title */}
-      <h1 className="text-2xl font-bold">SkillPath</h1>
+      <h1 className="text-2xl font-bold cursor-pointer" onClick={() => router.push("/dashboard")}>SkillPath</h1>
 
       {/* ✅ User Profile Button */}
       <UserButton appearance={{ elements: { userButtonPopoverFooter: "hidden" } }} />

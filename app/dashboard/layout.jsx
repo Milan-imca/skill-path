@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }) => {
         <div className='hidden md:block'>
           {/* <SideBar /> */}
         </div>
-        <div className=' p-5 '>
+        <div className='p-5'>
           {/* <Header /> */}
           <div className=''>
             {children}

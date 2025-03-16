@@ -8,11 +8,11 @@ const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-2.0-flash",
 });
 
 const generationConfig = {
-  temperature: 1,
+  temperature: 0.2,
   topP: 0.95,
   topK: 40,
   maxOutputTokens: 8192,
@@ -26,13 +26,25 @@ export const GenerateCourseLayout_AI = model.startChat({
     {
       role: "user",
       parts: [
-        { text: "Generate A Course Tutorial on Following\nDetail With field as  Course Name, Description,\nAlong with Chapter Name, about, Duration:\nCategory: 'Programming', Topic: Python,\nLevel:Basic, Duration:l hours, NoOf\nChapters:5 , in JSON format" },
+        { text: "Generate a JSON response for a course with the following fields:\n  - \"Course Name\": (string) The name of the course.\n  - \"Description\": (string) A brief summary of the course.\n  - \"Category\": (string) The course category.\n  - \"Topic\": (string) The course topic.\n  - \"Level\": (string) Beginner, Intermediate, or Advanced.\n  - \"Duration\": (string) Total duration of the course.\n  - \"NoOfChapters\": (integer) Number of chapters.\n  - \"Chapters\": (array) Each chapter must include:\n    - \"Chapter Name\" (string) (strictly in this format)\n    - \"about\" (string) A brief description of the chapter.\n    - \"Duration\" (string) Time required for the chapter.\n  \n  The response **must be in strict JSON format** with no additional text or explanations." },
       ],
     },
     {
       role: "model",
       parts: [
-        { text: "```json\n{\n  \"Course Name\": \"Python Programming Fundamentals\",\n  \"Description\": \"This course provides a foundational understanding of Python programming, covering essential concepts and practical skills for beginners. Learn to write clean, efficient code and build simple applications.\",\n  \"Category\": \"Programming\",\n  \"Topic\": \"Python\",\n  \"Level\": \"Basic\",\n  \"Duration\": \"5 hours\",\n  \"NoOfChapters\": 5,\n  \"Chapters\": [\n    {\n      \"Chapter Name\": \"Introduction to Python and Setup\",\n      \"about\": \"This chapter introduces you to the world of Python, explaining its uses and advantages. You'll learn how to install Python and set up your development environment.\",\n      \"Duration\": \"1 hour\"\n     },\n    {\n      \"Chapter Name\": \"Data Types and Variables\",\n      \"about\": \"Explore the core data types in Python (integers, floats, strings, booleans) and how to declare and use variables. You'll also learn about operators for performing basic calculations.\",\n      \"Duration\": \"1 hour\"\n    },\n     {\n      \"Chapter Name\": \"Control Flow: Conditional Statements\",\n      \"about\": \"Master the art of controlling the flow of your programs using conditional statements (if, elif, else). Learn to make your code execute different blocks based on various conditions.\",\n      \"Duration\": \"1 hour\"\n    },\n    {\n      \"Chapter Name\": \"Control Flow: Loops\",\n       \"about\": \"Discover the power of loops (for and while) to repeat tasks efficiently. You'll learn how to iterate through sequences and perform actions multiple times.\",\n       \"Duration\": \"1 hour\"\n    },\n     {\n       \"Chapter Name\": \"Introduction to Functions\",\n       \"about\": \"Learn about functions, a fundamental building block in programming. You'll learn how to create and use functions to organize code into reusable blocks.\",\n        \"Duration\":\"1 hour\"\n     }\n\n  ]\n}\n```\n" },
+        { text: "```json\n{\n  \"Course Name\": \"Introduction to Python Programming\",\n  \"Description\": \"A beginner-friendly course covering the fundamentals of Python programming.\",\n  \"Category\": \"Programming\",\n  \"Topic\": \"Python\",\n  \"Level\": \"Beginner\",\n  \"Duration\": \"12 hours\",\n  \"NoOfChapters\": 5,\n  \"Chapters\": [\n    {\n      \"Chapter Name\": \"Chapter 1: Introduction to Python\",\n      \"about\": \"Learn the basics of Python and set up your development environment.\",\n      \"Duration\": \"2 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 2: Data Types and Variables\",\n      \"about\": \"Explore different data types and learn how to work with variables.\",\n      \"Duration\": \"2.5 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 3: Operators and Expressions\",\n      \"about\": \"Understand operators, expressions, and control flow statements.\",\n      \"Duration\": \"2.5 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 4: Functions and Modules\",\n      \"about\": \"Learn how to define functions and use modules in Python.\",\n      \"Duration\": \"3 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 5: Working with Lists and Dictionaries\",\n      \"about\": \"Explore lists and dictionaries, and learn how to manipulate them.\",\n      \"Duration\": \"2 hours\"\n    }\n  ]\n}\n```" },
+      ],
+    },
+    {
+      role: "user",
+      parts: [
+        { text: "Generate a JSON response for a course with the following fields:\n  - \"Course Name\": (string) The name of the course.\n  - \"Description\": (string) A brief summary of the course.\n  - \"Category\": (string) The course category.\n  - \"Topic\": (string) The course topic.\n  - \"Level\": (string) Beginner, Intermediate, or Advanced.\n  - \"Duration\": (string) Total duration of the course.\n  - \"NoOfChapters\": (integer) Number of chapters.\n  - \"Chapters\": (array) Each chapter must include:\n    - \"Chapter Name\" (string) (strictly in this format)\n    - \"about\" (string) A brief description of the chapter.\n    - \"Duration\" (string) Time required for the chapter.\n  \n  The response **must be in strict JSON format** with no additional text or explanations." },
+      ],
+    },
+    {
+      role: "model",
+      parts: [
+        { text: "```json\n{\n  \"Course Name\": \"Advanced Machine Learning Techniques\",\n  \"Description\": \"A deep dive into advanced machine learning algorithms and their applications.\",\n  \"Category\": \"Data Science\",\n  \"Topic\": \"Machine Learning\",\n  \"Level\": \"Advanced\",\n  \"Duration\": \"30 hours\",\n  \"NoOfChapters\": 7,\n  \"Chapters\": [\n    {\n      \"Chapter Name\": \"Chapter 1: Ensemble Methods\",\n      \"about\": \"Exploring techniques like bagging, boosting, and stacking for improved model performance.\",\n      \"Duration\": \"4 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 2: Deep Neural Networks\",\n      \"about\": \"In-depth study of convolutional neural networks (CNNs) and recurrent neural networks (RNNs).\",\n      \"Duration\": \"5 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 3: Generative Adversarial Networks (GANs)\",\n      \"about\": \"Understanding GAN architectures and their applications in image generation and data augmentation.\",\n      \"Duration\": \"4 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 4: Reinforcement Learning\",\n      \"about\": \"Introduction to reinforcement learning concepts, algorithms, and environments.\",\n      \"Duration\": \"4 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 5: Natural Language Processing (NLP)\",\n      \"about\": \"Advanced NLP techniques including transformers and sequence-to-sequence models.\",\n      \"Duration\": \"4 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 6: Time Series Analysis\",\n      \"about\": \"Advanced time series modeling techniques and forecasting methods.\",\n      \"Duration\": \"5 hours\"\n    },\n    {\n      \"Chapter Name\": \"Chapter 7: Model Deployment and Monitoring\",\n      \"about\": \"Strategies for deploying machine learning models and monitoring their performance in production.\",\n      \"Duration\": \"4 hours\"\n    }\n  ]\n}\n```" },
       ],
     },
   ],

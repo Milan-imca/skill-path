@@ -17,7 +17,7 @@ const AddCourse = () => {
     e.preventDefault(); // Prevent default link behavior
     setLoading(true); // Start loading
 
-    const redirectUrl = userCourseList.length >= 5 ? "/dashboard/upgrade" : "/create-course";
+    const redirectUrl = "/create-course";
     
     // Simulate a small delay for better UX
     setTimeout(() => {
