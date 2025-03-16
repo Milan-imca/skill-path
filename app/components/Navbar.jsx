@@ -60,7 +60,6 @@ const Navbar = () => {
       {/* ✅ User Button (Clerk) */}
       <UserButton appearance={{ elements: { userButtonPopoverFooter: "hidden" } }} />
     </div>
-    <ToastContainer />
     </>
   );
 };
