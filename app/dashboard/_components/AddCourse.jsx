@@ -32,7 +32,7 @@ const AddCourse = () => {
         <h2 className='text-2xl font-semibold'>{user?.fullName || user?.username} 👋🏻</h2>
         <p className='text-sm text-gray-600 mt-1'>Create your courses with AI</p>
       </div>
-
+  
       <Button
         onClick={handleClick}
         className='bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-5 rounded-lg shadow-lg transition-all flex items-center gap-2'

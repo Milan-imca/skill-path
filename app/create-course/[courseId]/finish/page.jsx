@@ -43,12 +43,12 @@ const FinishScreen = ({ params: paramsPromise, refreshData }) => {
   useEffect(() => {
     console.log("Current Pathname:", pathname);
     console.log("Expected Path:", `/course/${course?.courseId}/start`);
-  
+
     if (pathname === `/course/${course?.courseId}/start`) {
       setIsNavigating(false); // Reset after navigation
     }
   }, [pathname, course?.courseId]);
-  
+
 
   const GetCourse = async () => {
     setLoading(true);

@@ -13,8 +13,6 @@ import LoadingDialog from '../_components/LoadingDialog'
 import service from '@/configs/service'
 import { useRouter } from 'next/navigation'
 
-
-
 const Course = ({ params: paramsPromise }) => {
   const params = use(paramsPromise);
   const { user } = useUser();
